@@ -18,6 +18,7 @@ export * from './Details';
 export * from './Dialog';
 export * from './Drawer';
 export * from './Icon';
+export * from './Filter';
 export * from './Notice';
 export * from './Pagination';
 export * from './Radio';
