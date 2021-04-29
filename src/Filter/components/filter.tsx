@@ -13,21 +13,37 @@ import classNames from 'classnames';
 import {getFakeTag} from '../../skin-utils';
 
 export type FilterProps = React.HTMLProps<HTMLButtonElement | HTMLAnchorElement> & {
-  selected?: any;
+  selected?: Boolean;
   a11ySelectedText?: string;
-  number?: number;
 };
-export const Filter = ({...props}: FilterProps) => {
+export const Filter = ({onClick, ...props}: FilterProps) => {
   const baseClass = props.href ? 'filter-link' : 'filter-button';
   const tag = getFakeTag(!!props.href, 'a', 'button');
+  const [selected, setSelected] = React.useState(props.selected);
+
   const defaultProps = {
     className: classNames(baseClass, `${baseClass}--${props.selected ? 'selected' : 'unselected'}`, props.className),
     type: !props.href && 'button',
     'aria-pressed': !props.href && props.selected && 'true'
   };
+
+  React.useEffect(() => {
+    if (selected == props.selected) {
+      setSelected(props.selected || false);
+    }
+  }, [props.selected]);
+
+  const handleClick = (event) => {
+    if (!props.disabled) {
+      setSelected(!selected);
+      onClick(event);
+    }
+  };
+
   return React.createElement(tag, {
     ...props,
     ...defaultProps,
+    handleClick,
     children: (
       <span className={`${baseClass}__cell`}>
         <span>{props.children}</span>

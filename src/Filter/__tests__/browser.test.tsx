@@ -10,46 +10,61 @@
 
 import React from 'react';
 import {render} from '@testing-library/react';
-import {Filter} from '../index';
+import * as template from '../components/filter';
+import * as mock from './mocks';
+let component;
 
-it('renders defaults', async () => {
-  const {getByText} = await render(<Filter number={5} />);
-  expect(getByText('5')).toBeInTheDocument();
-});
-
-it('renders number with rounded-up value', async () => {
-  const {getByText} = await render(<Filter number={5.6} />);
-  expect(getByText('5')).toBeInTheDocument();
-});
-
-it('does not render with negative value', async () => {
-  const {queryByText} = await render(<Filter number={-5} />);
-  expect(queryByText(/\d+/)).toBeNull();
-});
-
-describe('given number is a string', () => {
-  it('renders number with coerced string', async () => {
-    const {getByText} = await render(<Filter number="5" />);
-    expect(getByText('5')).toBeInTheDocument();
+describe('given filter is enabled', () => {
+  const input = mock.Basic;
+  beforeEach(async () => {
+    component = await render(template, input);
   });
 
-  it('renders number with rounded-up string', async () => {
-    const {getByText} = await render(<Filter number="5.6" />);
-    expect(getByText('5')).toBeInTheDocument();
+  it('then it is not selected', () => {
+    expect(component.getByRole('button')).does.not.have.attr('aria-pressed');
   });
 
-  it('does not renders with an invalid string', async () => {
-    const {queryByText} = await render(<Filter number="five" />);
-    expect(queryByText(/\d+/)).toBeNull();
-  });
+  describe('when filter is clicked', () => {
+    beforeEach(async () => {
+      await fireEvent.click(component.getByRole('button'));
+    });
 
-  it('does not renders with a negative string', async () => {
-    const {queryByText} = await render(<Filter number="-5" />);
-    expect(queryByText(/\d+/)).toBeNull();
+    it('then it emits the event with correct data', () => {
+      const clickEvents = component.emitted('click');
+      expect(clickEvents).has.length(1);
+      const [[clickEventArg]] = clickEvents;
+      expect(clickEventArg).has.property('originalEvent');
+      expect(clickEventArg).has.property('selected', true);
+    });
+
+    it('then it is selected', () => {
+      expect(component.getByRole('button')).has.attr('aria-pressed', 'true');
+    });
+
+    describe('when it is clicked again', () => {
+      beforeEach(async () => {
+        await fireEvent.click(component.getByRole('button'));
+      });
+
+      it('then it is not selected', () => {
+        expect(component.getByRole('button')).does.not.have.attr('aria-pressed');
+      });
+    });
   });
 });
 
-it('truncates when the value is greater than 99', async () => {
-  const {getByText} = await render(<Filter number={150} />);
-  expect(getByText('99+')).toBeInTheDocument();
+describe('given filter is disabled', () => {
+  beforeEach(async () => {
+    component = await render(template, {disabled: true});
+  });
+
+  describe('when filter is clicked', () => {
+    beforeEach(async () => {
+      await fireEvent.click(component.getByRole('button'));
+    });
+
+    it('then it does not emit the event', () => {
+      expect(component.emitted('click')).has.length(0);
+    });
+  });
 });
