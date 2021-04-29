@@ -12,7 +12,6 @@ export const Basic = (props) => (
 export const SelectedProps = {
   children: 'text',
   selected: true
-
 };
 export const Selected = (props) => (
   <Filter {...SelectedProps} {...props}>
@@ -23,14 +22,12 @@ export const Selected = (props) => (
 export const DisabledProps = {
   children: 'text',
   disabled: true
-
 };
 export const Disabled = (props) => (
   <Filter {...DisabledProps} {...props}>
     {props.children || DisabledProps.children}
   </Filter>
 );
-
 
 export const FakeProps = {
   children: 'text',
@@ -57,11 +54,10 @@ export const Fake_Selected = (props) => (
 export const Fake_DisabledProps = {
   children: 'text',
   href: '#fake',
-  disabled: true,
+  disabled: true
 };
 export const Fake_Disabled = (props) => (
   <Filter {...Fake_DisabledProps} {...props}>
     {props.children || Fake_DisabledProps.children}
   </Filter>
 );
-
