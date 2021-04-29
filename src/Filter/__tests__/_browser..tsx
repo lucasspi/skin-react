@@ -20,9 +20,9 @@ describe('given filter is enabled', () => {
 //     component = await render(template, input);
 //   });
 
-//   it('then it is not selected', () => {
-//     expect(component.getByRole('button')).does.not.have.attr('aria-pressed');
-//   });
+  it('then it is not selected', () => {
+    // expect(component.getByRole('button')).does.not.have.attr('aria-pressed');
+  });
 
 //   describe('when filter is clicked', () => {
 //     beforeEach(async () => {
